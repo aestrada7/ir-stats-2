@@ -15,4 +15,4 @@ class Constants:
     IRACING_LOGIN_URL = "https://members-ng.iracing.com/auth"
     IRACING_RESULTS_URL = "https://members-ng.iracing.com/data/results/search_series"
     IRACING_TRACKS_URL = "https://members-ng.iracing.com/data/track/get"
-    IRACING_MEMBER_URL = "https://members-ng.iracing.com/data/member/get" #?cust_ids=xxx
+    IRACING_MEMBER_URL = "https://members-ng.iracing.com/data/member/get"

@@ -39,7 +39,7 @@ def process_subsession(db, session, subsession_id):
                 insert_driver(db, cust_id, display_name,club_name, helm_color1, helm_color2, helm_color3)
                 insert_race_result(db, finishing_position, starting_position, laps, cust_id, car_id, led, dnf, champ_points, irating, irating_change, display_name, 
                                    subsession_id, car_name, car_num, interval)
-    print(f"subsession {subsession_id} PROCESSED ok")
+    print(f"Subsession {subsession_id} PROCESSED ok")
 
 '''
 Retrieve results from a series in a season.
@@ -49,6 +49,9 @@ def get_results(db, session, cust_id, series_id, season_year, season_quarter, ca
     results = session.get(IRACING_RESULTS_DATA_URL)
 
     chunk_info = results.json()['data']['chunk_info']
+
+    if chunk_info['num_chunks'] != 0:
+        insert_season(db, cust_id, season_year, season_quarter, series_id)
 
     for item in chunk_info['chunk_file_names']:
         chunk_url = chunk_info['base_download_url'] + item
@@ -71,4 +74,4 @@ def get_results(db, session, cust_id, series_id, season_year, season_quarter, ca
             if subsession_inserted:
                 process_subsession(db, session, subsession_id)
 
-    print('finished')
+    print('Process Finished')

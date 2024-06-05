@@ -44,7 +44,34 @@ def upsert_user(db, email, cust_id, encoded_pwd):
         cursor.execute(insert_sql, (cust_id, email, encoded_pwd))
         conn.commit()
         cursor.close()
-        print('session ok')
+        print('Session ok')
+
+    except psycopg2.Error as error:
+        print('Error - ', error)
+
+def insert_season(db, cust_id, season_year, season_quarter, series_id):
+    try:
+        conn = db
+        cursor = conn.cursor()
+
+        select_sql = '''
+            SELECT cust_id FROM seasons WHERE cust_id = %s AND season_year = %s AND season_quarter = %s AND series_id = %s
+        '''
+        cursor.execute(select_sql, (cust_id, season_year, season_quarter, series_id))
+        result = cursor.fetchone()
+        if result:
+            print(f'Season {season_year}/{season_quarter} already exists')
+            cursor.close()
+            return
+
+        insert_sql = '''
+            INSERT INTO seasons(cust_id, season_year, season_quarter, series_id)
+            VALUES(%s, %s, %s, %s)
+        '''
+        cursor.execute(insert_sql, (cust_id, season_year, season_quarter, series_id))
+        conn.commit()
+        cursor.close()
+        print(f'Season {season_year}/{season_quarter} added correctly.')
 
     except psycopg2.Error as error:
         print('Error - ', error)
@@ -60,7 +87,7 @@ def insert_driver(db, cust_id, display_name, club_name, helm_color1, helm_color2
         cursor.execute(select_sql, (cust_id,))
         result = cursor.fetchone()
         if result:
-            print(f'driver {cust_id} already exists')
+            print(f'Driver {cust_id} already exists')
             cursor.close()
             return
 
@@ -105,7 +132,7 @@ def insert_subsession(db, subsession_id, start_time, event_laps_complete, series
         cursor.execute(select_sql, (subsession_id,))
         row = cursor.fetchone()
         if row:
-            print(f'subsesh {subsession_id} already exists')
+            print(f'Subsession {subsession_id} already exists, skipping.')
             return False
 
         insert_sql = '''
@@ -117,7 +144,7 @@ def insert_subsession(db, subsession_id, start_time, event_laps_complete, series
         conn.commit()
         cursor.close()
 
-        print(f'subsesh {subsession_id} written ok!')
+        print(f'Subsession {subsession_id} created.')
         return True
 
     except psycopg2.Error as error:
@@ -136,7 +163,7 @@ def update_subsession(db, subsession_id, total_laps, max_weeks, sof):
         cursor.execute(update_sql, (total_laps, max_weeks, sof, subsession_id))
         conn.commit()
         cursor.close()
-        print(f'subsesh {subsession_id} updated correctly with sof {sof}!')
+        print(f'Subsession {subsession_id} updated correctly with sof: {sof}')
 
     except psycopg2.Error as error:
         print('Error - ', error)
