@@ -10,7 +10,7 @@ def process_subsession(db, session, subsession_id):
     total_laps = race_results['race_summary']['laps_complete']
     max_weeks = race_results['max_weeks']
     sof = race_results['event_strength_of_field']
-    update_subsession(subsession_id, total_laps, max_weeks, sof)
+    update_subsession(db, subsession_id, total_laps, max_weeks, sof)
 
     for subsession_results in race_results['session_results']:
         if subsession_results['simsession_type'] == RACE_SESSION:
