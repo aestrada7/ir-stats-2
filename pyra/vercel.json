@@ -2,5 +2,10 @@
     "redirects": [{ "source": "/", "destination": "/api" }],
     "env": {
         "PYTHONPATH": "api/"
+    },
+    "functions": {
+        "api/fetch.py": {
+            "maxDuration": 60
+        }
     }
 }
