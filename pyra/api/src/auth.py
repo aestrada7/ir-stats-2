@@ -4,6 +4,18 @@ import hashlib
 from src.db import *
 from src.constants import *
 
+def auth_nodb(username, password):
+    base64_pwd = base64_password(username, password)
+    payload = { 'email': username, 'password': base64_pwd }
+
+    session = requests.Session()
+    response = session.post(Constants.IRACING_LOGIN_URL, data=payload)
+    authcode = response.json()['authcode']
+    if authcode == 0:
+        return session
+
+    return session    
+
 def authenticate(db, username, password):
     base64_pwd = base64_password(username, password)
     payload = { 'email': username, 'password': base64_pwd }

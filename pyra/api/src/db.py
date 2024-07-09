@@ -102,6 +102,26 @@ def insert_driver(db, cust_id, display_name, club_name, helm_color1, helm_color2
     except psycopg2.Error as error:
         print('Error - ', error)
 
+def get_drivers(db, params, is_id, maxItems):
+    try:
+        conn = db
+        cursor = conn.cursor()
+        select_sql = '''
+            SELECT cust_id, display_name, club_name, helm_color1, helm_color2, helm_color3 FROM drivers 
+        '''
+        if is_id:
+            select_sql += 'WHERE cust_id = %s'
+            cursor.execute(select_sql, (params['custid'],))
+        else:
+            select_sql += 'WHERE display_name ILIKE %s LIMIT %s'
+            cursor.execute(select_sql, ('%' + params['displayname'] + '%', maxItems))
+        result = cursor.fetchall()
+        cursor.close()
+        return result
+
+    except psycopg2.Error as error:
+        print('Error - ', error)
+
 def insert_race_result(db, finishing_position, starting_position, laps, cust_id, car_id, led, dnf, champ_points, irating, irating_change, display_name, 
                        subsession_id, car_name, car_num, interval):
     try:
@@ -151,7 +171,7 @@ def insert_subsession(db, subsession_id, start_time, event_laps_complete, series
         print('Error - ', error)
 
 '''
-Adds info to the subsesh
+Adds info to the subsession
 '''
 def update_subsession(db, subsession_id, total_laps, max_weeks, sof):
     try:
@@ -166,4 +186,65 @@ def update_subsession(db, subsession_id, total_laps, max_weeks, sof):
         print(f'Subsession {subsession_id} updated correctly with sof: {sof}')
 
     except psycopg2.Error as error:
+        print('Error - ', error)
+
+def get_messages(db, cust_id, season_year, season_quarter, race_week_num, series_id):
+    try:
+        conn = db
+        cursor = conn.cursor()
+        select_sql = '''
+            SELECT * FROM messages WHERE cust_id = %s AND season_year = %s AND season_quarter = %s AND race_week_num = %s AND series_id = %s
+        '''
+        cursor.execute(select_sql, (cust_id, season_year, season_quarter, race_week_num, series_id))
+        result = cursor.fetchall()
+        cursor.close()
+        return result
+
+    except psycopg2.Error as error:
+        print('Error - ', error)
+
+def get_messages_by_track(db, cust_id, track_id, series_id):
+    try:
+        conn = db
+        cursor = conn.cursor()
+        select_sql = '''
+            SELECT * FROM messages WHERE cust_id = %s AND track_id = %s AND series_id = %s
+        '''
+        cursor.execute(select_sql, (cust_id, track_id, series_id))
+        result = cursor.fetchall()
+        cursor.close()
+        return result
+
+    except psycopg2.Error as error:
+        print('Error - ', error)
+
+def upsert_message(db, cust_id, season_year, season_quarter, race_week_num, message, track_id, series_id):
+    try:
+        conn = db
+        cursor = conn.cursor()
+        select_sql = '''
+            SELECT * FROM messages WHERE cust_id = %s AND season_year = %s AND season_quarter = %s AND race_week_num = %s AND series_id = %s
+        '''
+        cursor.execute(select_sql, (cust_id, season_year, season_quarter, race_week_num, series_id))
+        row = cursor.fetchone()
+        if row:
+            update_sql = '''
+                UPDATE messages SET message = %s WHERE cust_id = %s AND season_year = %s AND season_quarter = %s AND race_week_num = %s AND series_id = %s
+            '''
+            cursor.execute(update_sql, (message, cust_id, season_year, season_quarter, race_week_num, series_id))
+            conn.commit()
+            cursor.close()
+            print(f'Message updated correctly for cust_id {cust_id}, season_year {season_year}, season_quarter {season_quarter}, race_week_num {race_week_num}, series_id {series_id}')
+            return
+        
+        insert_sql = '''
+            INSERT INTO messages(cust_id, season_year, season_quarter, race_week_num, message, track_id, series_id)
+            VALUES(%s, %s, %s, %s, %s, %s, %s)
+        '''
+        cursor.execute(insert_sql, (cust_id, season_year, season_quarter, race_week_num, message, track_id, series_id))
+        conn.commit()
+        cursor.close()
+        print(f'Message created correctly for cust_id {cust_id}, season_year {season_year}, season_quarter {season_quarter}, race_week_num {race_week_num}, series_id {series_id}')
+
+    except psycopg2.Error as error: 
         print('Error - ', error)

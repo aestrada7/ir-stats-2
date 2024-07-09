@@ -3,7 +3,7 @@ from src.db import *
 
 def process_subsession(db, session, subsession_id):
     RACE_SESSION = 6
-    IRACING_SUBSESSION_DATA_URL = f"https://members-ng.iracing.com/data/results/get?subsession_id={subsession_id}"
+    IRACING_SUBSESSION_DATA_URL = f"{Constants.IRACING_SUBSESSION_URL}?subsession_id={subsession_id}"
     data_cache = session.get(IRACING_SUBSESSION_DATA_URL)
     race_results = session.get(data_cache.json()['link']).json()
 
