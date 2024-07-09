@@ -1,5 +1,6 @@
 from http.server import BaseHTTPRequestHandler
 import urllib.parse
+import json
 
 from src.db import *
 
@@ -27,6 +28,7 @@ class handler(BaseHTTPRequestHandler):
                 print('Str')
                 output = get_drivers(db, { 'displayname': val }, False, MAX_ITEMS)
 
+            output = json.dumps(output)
             print(output)
         except:
             print('Missing parameters')
