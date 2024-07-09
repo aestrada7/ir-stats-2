@@ -24,13 +24,9 @@ class handler(BaseHTTPRequestHandler):
             val = qs['usr'][0]
             print(val)
             if isinstance(val, int):
-                print('int')
                 output = self.get_driver_by_id(db, val, MAX_ITEMS)
             elif isinstance(val, str):
-                print('str')
                 output = self.get_drivers_by_name(db, val, MAX_ITEMS)
-            else:
-                print('else')
         except:
             print('Missing parameters')
             return
