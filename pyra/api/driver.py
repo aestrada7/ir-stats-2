@@ -10,6 +10,7 @@ class handler(BaseHTTPRequestHandler):
         db = get_database()
         query = urllib.parse.urlparse(self.path).query
         qs = urllib.parse.parse_qs(query)
+        output = ""
 
         try:
             val = qs['usr'][0]
@@ -17,11 +18,16 @@ class handler(BaseHTTPRequestHandler):
                 val = int(val)
             except ValueError:
                 val = str(val)
+            print(val)
 
             if isinstance(val, int):
+                print('Int')
                 output = get_drivers(db, { 'custid': val }, True, MAX_ITEMS)
             elif isinstance(val, str):
+                print('Str')
                 output = get_drivers(db, { 'displayname': val }, False, MAX_ITEMS)
+
+            print(output)
         except:
             print('Missing parameters')
             return
