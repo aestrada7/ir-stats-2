@@ -4,15 +4,6 @@ import urllib.parse
 from src.db import *
 
 class handler(BaseHTTPRequestHandler):
-
-    def get_driver_by_id(db, id, maxItems):
-        result = get_drivers(db, { 'custid': id }, True, maxItems)
-        return result
-
-    def get_drivers_by_name(db, name, maxItems):
-        result = get_drivers(db, { 'displayname': name }, False, maxItems)
-        return result
-
     def do_GET(self):
         MAX_ITEMS = 5
 
@@ -22,11 +13,15 @@ class handler(BaseHTTPRequestHandler):
 
         try:
             val = qs['usr'][0]
-            print(val)
+            try:
+                val = int(val)
+            except ValueError:
+                val = str(val)
+
             if isinstance(val, int):
-                output = self.get_driver_by_id(db, val, MAX_ITEMS)
+                output = get_drivers(db, { 'custid': val }, True, MAX_ITEMS)
             elif isinstance(val, str):
-                output = self.get_drivers_by_name(db, val, MAX_ITEMS)
+                output = get_drivers(db, { 'displayname': val }, False, MAX_ITEMS)
         except:
             print('Missing parameters')
             return
