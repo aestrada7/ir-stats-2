@@ -2,13 +2,16 @@ from http.server import BaseHTTPRequestHandler
 import urllib.parse
 
 from src.db import *
+
 class handler(BaseHTTPRequestHandler):
 
     def get_driver_by_id(db, id, maxItems):
+        print('get_driver_by_id')
         result = get_drivers(db, { 'custid': id }, True, maxItems)
         return result
 
     def get_drivers_by_name(db, name, maxItems):
+        print('get_drivers_by_name')
         result = get_drivers(db, { 'displayname': name }, False, maxItems)
         return result
 
@@ -21,6 +24,7 @@ class handler(BaseHTTPRequestHandler):
 
         try:
             val = qs['usr'][0]
+            print(val)
             if isinstance(val, int):
                 output = self.get_driver_by_id(db, val, MAX_ITEMS)
             elif isinstance(val, str):
