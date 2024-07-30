@@ -22,10 +22,8 @@ class handler(BaseHTTPRequestHandler):
             print(val)
 
             if isinstance(val, int):
-                print('Int')
                 output = get_drivers(db, { 'custid': val }, True, MAX_ITEMS)
             elif isinstance(val, str):
-                print('Str')
                 output = get_drivers(db, { 'displayname': val }, False, MAX_ITEMS)
 
             output = json.dumps(output)

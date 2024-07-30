@@ -115,9 +115,16 @@ def get_drivers(db, params, is_id, maxItems):
         else:
             select_sql += 'WHERE display_name ILIKE %s LIMIT %s'
             cursor.execute(select_sql, ('%' + params['displayname'] + '%', maxItems))
+        
         result = cursor.fetchall()
+        column_names = [desc[0] for desc in cursor.description]
         cursor.close()
-        return result
+
+        output = []
+        for row in result:
+            output.append(dict(zip(column_names, row)))
+
+        return output
 
     except psycopg2.Error as error:
         print('Error - ', error)
