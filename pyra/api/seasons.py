@@ -13,7 +13,7 @@ class handler(BaseHTTPRequestHandler):
         output = ""
 
         try:
-            val = qs['usr'][0]
+            val = qs['cust_id'][0]
             print(val)
 
             output = get_seasons(db, Constants.SERIES_ID_INDY_FIXED_OVAL, val)
