@@ -1,0 +1,9 @@
+.vscode/
+/next-fe/node_modules/
+/next-fe/.next/
+/next-fe/.env.local
+/next-fe/.env
+/pyra/.env
+/pyra/_trash
+/pyra/api/__pycache__
+/pyra/api/src/__pycache__

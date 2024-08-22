@@ -76,6 +76,28 @@ def insert_season(db, cust_id, season_year, season_quarter, series_id):
     except psycopg2.Error as error:
         print('Error - ', error)
 
+def get_seasons(db, series_id, cust_id):
+    try:
+        conn = db
+        cursor = conn.cursor()
+        select_sql = '''
+            SELECT season_year, season_quarter, series_id, cust_id FROM seasons WHERE series_id = %s AND cust_id = %s
+        '''
+        cursor.execute(select_sql, (series_id, cust_id,))
+
+        result = cursor.fetchall()
+        column_names = [desc[0] for desc in cursor.description]
+        cursor.close()
+
+        output = []
+        for row in result:
+            output.append(dict(zip(column_names, row)))
+
+        return output
+
+    except psycopg2.Error as error:
+        print('Error - ', error)
+
 def insert_driver(db, cust_id, display_name, club_name, helm_color1, helm_color2, helm_color3):
     try:
         conn = db
