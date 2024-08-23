@@ -1,0 +1,31 @@
+@import '@/scss/globals';
+
+.cardLink {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid $accent-color;
+    padding: 10px;
+    margin-bottom: 12px;
+    margin-right: 10px;
+    width: 150px;
+    height: 150px;
+    background-color: $white;
+    /*border-radius: var(--global-border-radius);
+    box-shadow: var(--global-box-shadow);*/
+    
+    /*@include media-small {
+        width: 100%;
+        height: 50px;
+    }*/
+    
+    &:hover {
+        background: $accent-color;
+        cursor: pointer;
+    
+        span {
+            text-decoration: none;
+            color: $white;
+        }
+    }
+}
