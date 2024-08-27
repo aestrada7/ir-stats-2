@@ -2,7 +2,7 @@ import MenuCard from "@/components/MenuCard/MenuCard";
 import { getSeasonList } from "@/services/dataFetch";
 
 export default async function Page() {
-    const seasonList = await getSeasonList(182407, 165);
+    const seasonList = await getSeasonList(182407, 132);
 
     return (
         <div>

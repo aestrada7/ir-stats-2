@@ -1,0 +1,20 @@
+@import '@/scss/globals';
+
+.seasonHeader {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: $accent-color;
+    color: $white;
+
+    .largeHeader {
+        min-width: 250px;
+    }
+
+    .simpleHeader {
+        min-width: 50px;
+        text-align: center;
+    }
+}

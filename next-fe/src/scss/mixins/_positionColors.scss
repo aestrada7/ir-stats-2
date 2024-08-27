@@ -1,0 +1,24 @@
+@mixin positionColors($position) {
+    @if $position >= 16 {
+        background-color: $background-p33;
+        color: $foreground-p33;
+    } @else if $position >= 11 {
+        background-color: $background-p20;
+        color: $foreground-p20;
+    } @else if $position >= 6 {
+        background-color: $background-p10;
+        color: $foreground-p10;
+    } @else if $position >= 4 {
+        background-color: $background-p5;
+        color: $foreground-p5;
+    } @else if $position == 3 {
+        background-color: $background-p3;
+        color: $foreground-p3;
+    } @else if $position == 2 {
+        background-color: $background-p2;
+        color: $foreground-p2;
+    } @else if $position == 1 {
+        background-color: $background-p1;
+        color: $foreground-p1;
+    }
+}

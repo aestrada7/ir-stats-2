@@ -1,2 +1,69 @@
-$accent-color: #e60;
+/* Colors */
 $white: #fff;
+$black: #000;
+$translucent-black-30: rgba(0, 0, 0, 0.3);
+$accent-color: #ee6600;
+$background-light-grey: #efefef;
+$background-dark-grey: #222;
+$background-table: #fff;
+$background-table-alternate: #f9fafb;
+$background-head: #cc5500;
+$achieved-position-all-challenge: #52f7b2;
+
+/* Season Colors */
+$season-1: #77cc00;
+$season-2: #cc0077;
+$season-3: #cc7700;
+$season-4: #0077cc;
+
+/* Position Colors */
+$background-p1: #ffdd00;
+$foreground-p1: #000;
+$background-p2: #dfdfdf;
+$foreground-p2: #000;
+$background-p3: #ffdf9f;
+$foreground-p3: #000;
+$background-p5: #dfffdf;
+$foreground-p5: #000;
+$background-p10: #cfeaff;
+$foreground-p10: #000;
+$background-p20: #cfcfff;
+$foreground-p20: #222;
+$background-p33: #ffcfcf;
+$foreground-p33: #000;
+$max-position: 33;
+
+/* Notification Colors */
+$background-error: #faa;
+$foreground-error: #c00;
+$background-warn: #ffa;
+$foreground-warn: #000;
+$background-info: #def;
+$foreground-info: #07c;
+
+/* Border Related */
+$global-border-radius: 4px;
+$global-tight-radius: 30px;
+$global-box-shadow: 0 2px 5px 0 var(--translucent-black-30);
+$global-box-shadow-horizontal: 2px 0 5px 0 var(--translucent-black-30);
+
+/* Fonts */
+$main-font: "Oswald";
+$secondary-font: "Teko";
+$alternate-font: "Roboto Condensed";
+$font-xxsmall: 10px;
+$font-xsmall: 12px;
+$font-small: 14px;
+$font-normal: 16px;
+$font-large: 18px;
+$font-xlarge: 20px;
+$font-xxlarge: 22px;
+$font-xxxlarge: 32px;
+
+/* Layout */
+$app-width: 75%;
+$autocomplete-max-width: 300px;
+$autocomplete-mobile-margin: 60px;
+$chart-width: 500px;
+$chart-padding: 20px;
+$logo-max-width: 200px;

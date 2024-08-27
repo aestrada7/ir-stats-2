@@ -1,0 +1,54 @@
+@import '@/scss/globals';
+
+.sessionInfo {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    border-bottom: 1px solid $accent-color;
+
+    .sessionData {
+        min-width: 250px;
+        position: relative;
+    }
+
+    .week {
+        font-size: $font-xsmall;
+        border: 1px solid $accent-color;
+        background-color: $accent-color;
+        border-radius: $global-tight-radius;
+        color: $white;
+        padding: 1px 5px;
+        width: 40px;
+        text-align: center;
+
+        &:hover {
+            background-color: $white;
+            color: $accent-color;
+        }
+
+        /*@include media-small {
+            left: -45px;
+            top: 30px;
+        }*/
+    }
+
+    .points,
+    .laps,
+    .total,
+    .led,
+    .start,
+    .finish {
+        text-align: center;
+        min-width: 50px;
+        font-family: $secondary-font;
+        font-size: $font-xxxlarge;
+    }
+
+    @for $i from 1 through $max-position {
+        .p#{$i} {
+            @include positionColors($i);
+        }
+    }
+}
