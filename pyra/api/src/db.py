@@ -205,7 +205,7 @@ def get_season_subsessions(db, cust_id, season_year, season_quarter, series_id):
         cursor = conn.cursor()
         select_sql = '''
             SELECT s.subsession_id, s.start_time, s.event_laps_complete, s.season_quarter, s.season_year, s.race_week_num, s.track_id, s.max_weeks, s.series_id, s.winner_id,
-                   s.total_laps, s.sof, d.cust_id, r.champ_points, r.starting_position, r.finishing_position, r.led, v.display_name AS winner_name, v.helm_color1 AS winner_color1, 
+                   r.laps, s.sof, d.cust_id, r.champ_points, r.starting_position, r.finishing_position, r.led, v.display_name AS winner_name, v.helm_color1 AS winner_color1, 
                    v.helm_color2 AS winner_color2, v.helm_color3 AS winner_color3
             FROM subsessions s INNER JOIN driver_subsessions d ON s.subsession_id = d.subsession_id 
             INNER JOIN drivers v ON s.winner_id = v.cust_id
