@@ -199,6 +199,29 @@ def insert_subsession(db, subsession_id, start_time, event_laps_complete, series
     except psycopg2.Error as error:
         print('Error - ', error)
 
+def get_season_subsessions(db, cust_id, season_year, season_quarter, series_id):
+    try:
+        conn = db
+        cursor = conn.cursor()
+        select_sql = '''
+            SELECT * FROM subsessions s INNER JOIN driver_subsessions d ON s.subsession_id = d.subsession_id WHERE s.season_year = %s AND s.season_quarter = %s 
+            AND s.series_id = %s AND d.cust_id = %s
+        '''
+        cursor.execute(select_sql, (season_year, season_quarter, series_id, cust_id))
+        result = cursor.fetchall()
+        column_names = [desc[0] for desc in cursor.description]
+        cursor.close()
+
+        output = []
+        for row in result:
+            output.append(dict(zip(column_names, row)))
+
+        return output
+
+    except psycopg2.Error as error:
+        print('Error - ', error)
+
+
 '''
 Adds info to the subsession
 '''
@@ -213,6 +236,21 @@ def update_subsession(db, subsession_id, total_laps, max_weeks, sof):
         conn.commit()
         cursor.close()
         print(f'Subsession {subsession_id} updated correctly with sof: {sof}')
+
+    except psycopg2.Error as error:
+        print('Error - ', error)
+
+def insert_driver_subsession(db, cust_id, subsession_id):
+    try:
+        conn = db
+        cursor = conn.cursor()
+        insert_sql = '''
+            INSERT INTO driver_subsessions(cust_id, subsession_id)
+            VALUES(%s, %s)
+        '''
+        cursor.execute(insert_sql, (cust_id, subsession_id))
+        conn.commit()
+        cursor.close()
 
     except psycopg2.Error as error:
         print('Error - ', error)

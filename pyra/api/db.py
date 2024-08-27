@@ -24,6 +24,7 @@ try:
                                             champ_points INTEGER, irating INTEGER, irating_change INTEGER, display_name TEXT, subsession_id INTEGER, car_name TEXT,
                                             car_num TEXT, interval INTEGER)''')
     cursor.execute('''CREATE TABLE messages(cust_id INTEGER, season_year INTEGER, season_quarter INTEGER, race_week_num INTEGER, message TEXT, track_id INTEGER, series_id INTEGER)''')
+    cursor.execute('''CREATE TABLE driver_subsessions(cust_id INTEGER, subsession_id INTEGER)''')
     conn.commit()
     cursor.close()
     conn.close()

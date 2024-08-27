@@ -73,5 +73,6 @@ def get_results(db, session, cust_id, series_id, season_year, season_quarter, ca
             subsession_inserted = insert_subsession(db, subsession_id, start_time, event_laps_complete, series_name, season_quarter, season_year, race_week_num, track_id, max_weeks, series_id, caution_laps, winner_id, total_laps, sof)
             if subsession_inserted:
                 process_subsession(db, session, subsession_id)
+                insert_driver_subsession(db, cust_id, subsession_id)
 
     print('Process Finished')

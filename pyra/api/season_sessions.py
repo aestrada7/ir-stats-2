@@ -15,8 +15,11 @@ class handler(BaseHTTPRequestHandler):
         try:
             cust_id = qs['cust_id'][0]
             series_id = qs['series_id'][0]
+            season_year = qs['season_year'][0]
+            season_quarter = qs['season_quarter'][0]
 
             output = get_seasons(db, series_id, cust_id)
+            output = get_season_subsessions(db, cust_id, season_year, season_quarter, series_id)
 
             output = json.dumps(output)
             print(output)
