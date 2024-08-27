@@ -204,10 +204,15 @@ def get_season_subsessions(db, cust_id, season_year, season_quarter, series_id):
         conn = db
         cursor = conn.cursor()
         select_sql = '''
-            SELECT * FROM subsessions s INNER JOIN driver_subsessions d ON s.subsession_id = d.subsession_id WHERE s.season_year = %s AND s.season_quarter = %s 
-            AND s.series_id = %s AND d.cust_id = %s
+            SELECT s.subsession_id, s.start_time, s.event_laps_complete, s.season_quarter, s.season_year, s.race_week_num, s.track_id, s.max_weeks, s.series_id, s.winner_id,
+                   s.total_laps, s.sof, d.cust_id, r.champ_points, r.starting_position, r.finishing_position, r.led, v.display_name AS winner_name, v.helm_color1 AS winner_color1, 
+                   v.helm_color2 AS winner_color2, v.helm_color3 AS winner_color3
+            FROM subsessions s INNER JOIN driver_subsessions d ON s.subsession_id = d.subsession_id 
+            INNER JOIN drivers v ON s.winner_id = v.cust_id
+            LEFT JOIN raceresults r ON s.subsession_id = r.subsession_id AND r.cust_id = %s
+            WHERE s.season_year = %s AND s.season_quarter = %s AND s.series_id = %s AND d.cust_id = %s
         '''
-        cursor.execute(select_sql, (season_year, season_quarter, series_id, cust_id))
+        cursor.execute(select_sql, (cust_id, season_year, season_quarter, series_id, cust_id))
         result = cursor.fetchall()
         column_names = [desc[0] for desc in cursor.description]
         cursor.close()
@@ -220,7 +225,6 @@ def get_season_subsessions(db, cust_id, season_year, season_quarter, series_id):
 
     except psycopg2.Error as error:
         print('Error - ', error)
-
 
 '''
 Adds info to the subsession
