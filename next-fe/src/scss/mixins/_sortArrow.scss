@@ -1,0 +1,26 @@
+@mixin sortArrow($direction, $main-color, $hover-color) {
+    position: absolute;
+    color: $main-color;
+
+    &:hover {
+        color: $hover-color;
+    }
+
+    @if($direction == 'up') {
+        top: -12px;
+        left: -10px;
+    } @else if($direction == 'down') {
+        top: 6px;
+        left: -10px;
+    }
+
+    &::before {
+        @if($direction == 'up') {
+            content: "▲";
+        } @else if($direction == 'down') {
+            content: "▼";
+        }
+        font-size: $font-xsmall;
+        cursor: pointer;
+    }
+}

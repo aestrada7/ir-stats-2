@@ -1,0 +1,17 @@
+@mixin boxTitle {
+    position: relative;
+    font-size: $font-xxxlarge;
+    font-family: $secondary-font;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+
+    &::after {
+        content: '';
+        position: absolute;
+        bottom: 3px;
+        left: 0;
+        width: 30px;
+        height: 4px;
+        background-color: $accent-color;
+    }
+}

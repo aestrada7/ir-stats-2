@@ -1,0 +1,56 @@
+@import '@/scss/globals';
+
+.season {
+    @include globalBorder;
+
+    .seasonTitle {
+        margin: 20px;
+        padding-top: 20px;
+        @include boxTitle;
+    }
+
+    .seasonHeader {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+        background-color: $white;
+        color: $black;
+        font-size: $font-xlarge;
+        box-shadow: $global-box-shadow-horizontal;
+        position: sticky;
+        inset-block-start: 0;
+        z-index: 1;
+    
+        .largeHeader {
+            min-width: $season-card-width;
+        }
+    
+        .simpleHeader {
+            min-width: 75px;
+            text-align: center;
+            position: relative;
+
+            > p {
+                margin: 0;
+            }
+
+            .sortUp {
+                @include sortArrow('up', $black, $accent-color);
+
+                &.selected {
+                    @include sortArrow('up', $accent-color, $accent-color);
+                }
+            }
+
+            .sortDown {
+                @include sortArrow('down', $black, $accent-color);
+
+                &.selected {
+                    @include sortArrow('down', $accent-color, $accent-color);
+                }
+            }
+        }
+    }
+}

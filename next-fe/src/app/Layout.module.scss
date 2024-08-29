@@ -2,4 +2,6 @@
 
 .layout {
     font-family: $main-font;
+    -webkit-font-smoothing: antialiased;
+    margin: 20px 40px;
 }

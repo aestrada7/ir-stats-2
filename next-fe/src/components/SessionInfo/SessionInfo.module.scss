@@ -9,8 +9,31 @@
     border-bottom: 1px solid $accent-color;
 
     .sessionData {
-        min-width: 250px;
+        min-width: $season-card-width;
         position: relative;
+        display: grid;
+        grid-template-areas:
+            'week winner'
+            'track winner'
+            'date winner';
+
+        .winner {
+            grid-area: winner;
+            font-size: $font-xxlarge;
+            align-self: center;
+        }
+
+        .week {
+            grid-area: week;
+        }
+
+        .track {
+            grid-area: track;
+        }
+
+        .date {
+            grid-area: date;
+        }
     }
 
     .week {
@@ -34,6 +57,7 @@
         }*/
     }
 
+    .sof,
     .points,
     .laps,
     .total,
@@ -41,7 +65,7 @@
     .start,
     .finish {
         text-align: center;
-        min-width: 50px;
+        min-width: 75px;
         font-family: $secondary-font;
         font-size: $font-xxxlarge;
     }

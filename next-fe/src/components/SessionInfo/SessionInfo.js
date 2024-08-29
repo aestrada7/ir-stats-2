@@ -17,6 +17,7 @@ export default function SessionInfo(props) {
                     // <Driver id={session.winner_id} color1={session.winner_color1} color2={session.winner_color2} color3={session.winner_color3} name={session.winner_name} /> // 
                 }
             </div>
+            <div className={Classes.sof}>{session.sof}</div>
             <div className={Classes.points}>{session.champ_points}</div>
             <div className={Classes.laps}>{session.laps}/{session.event_laps_complete}</div>
             <div className={Classes.led}>{session.led}</div>

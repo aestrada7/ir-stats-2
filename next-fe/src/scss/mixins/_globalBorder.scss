@@ -1,0 +1,4 @@
+@mixin globalBorder {
+    border-radius: $global-border-radius;
+    box-shadow: $global-box-shadow;
+}
