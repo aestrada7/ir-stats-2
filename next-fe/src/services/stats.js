@@ -23,6 +23,7 @@ export const statsBoxDataBuild = (data) => {
     newData.top5Percentage = ((newData.top5s / newData.races) * 100).toPrecision(3);
     newData.top10Percentage = ((newData.top10s / newData.races) * 100).toPrecision(3);
     newData.actualLapsPercentage = ((newData.actualLaps / newData.totalLaps) * 100).toPrecision(3);
+    newData.ledPercentage = ((newData.lapsLed / newData.totalLaps) * 100).toPrecision(3);
     newData.winPercentage = ((newData.wins / newData.races) * 100).toPrecision(3);
     newData.dnfPercentage = ((newData.dnfs / newData.races) * 100).toPrecision(3);
 

@@ -1,4 +1,4 @@
-import { PYRA_BASE_URL } from "./config";
+import { PYRA_BASE_URL } from "@/services/config";
 
 const REVALIDATE_TIME = 3600;
 

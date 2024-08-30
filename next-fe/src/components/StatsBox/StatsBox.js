@@ -23,7 +23,7 @@ export default function StatsBox(props) {
                 </div>
                 <div className={Classes.singleStat}>
                     <div className={Classes.statTitle}>Laps Led</div>
-                    <div className={Classes.statValue}>{boxData.lapsLed}</div>
+                    <div className={Classes.statValue}>{boxData.lapsLed} ({boxData.ledPercentage}%)</div>
                 </div>
                 <div className={Classes.singleStat}>
                     <div className={Classes.statTitle}>Top 5s</div>
@@ -61,6 +61,12 @@ export default function StatsBox(props) {
                     <div className={Classes.statTitle}>DNFs</div>
                     <div className={Classes.statValue}>{boxData.dnfs} ({boxData.dnfPercentage}%)</div>
                 </div>
+                { boxData.champPosition > 0 ?
+                    <div className={Classes.singleStat}>
+                        <div className={Classes.statTitle}>Season Position</div>
+                        <div className={Classes.statValue}>{boxData.champPosition} / {boxData.totalDriversInSeason}</div>
+                    </div>
+                : ''}
             </div>
         </div>
     )

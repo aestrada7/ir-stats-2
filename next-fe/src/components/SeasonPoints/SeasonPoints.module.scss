@@ -1,0 +1,36 @@
+@import '@/scss/globals';
+
+.seasonPoints {
+    @include globalBorder;
+    padding: 20px;
+    margin-bottom: 20px;
+
+    .pointsHeader {
+        @include boxTitle;
+    }
+
+    .boxData {
+        display: grid;
+        grid-template-columns: 25% 25%;
+
+        .singleStat {
+            margin-bottom: 5px;
+
+            &.inUse {
+                color: $accent-color;
+            }
+
+            .statTitle {
+                font-size: $font-xsmall;
+                margin-bottom: -5px;
+                color: $grey;
+                text-transform: uppercase;
+            }
+
+            .statValue {
+                font-size: 28px;
+                font-family: $secondary-font;
+            }
+        }
+    }
+}
