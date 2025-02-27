@@ -1,41 +1,35 @@
-from http.server import BaseHTTPRequestHandler
-import urllib.parse
+import json
+from fastapi import APIRouter, Request, Response
 
 from src.auth import *
 from src.db import *
 from src.constants import *
 from src.iracing_api import *
 
-class handler(BaseHTTPRequestHandler):
- 
-    def do_GET(self):
-        query = urllib.parse.urlparse(self.path).query
-        qs = urllib.parse.parse_qs(query)
+router = APIRouter()
 
-        try:
-            user = qs['usr'][0]
-            password = base64_decode(qs['pwd'][0])
-            series_id = qs['sid'][0]
-            season_year = qs['sy'][0]
-            season_quarter = qs['sq'][0]
-            print(qs)
-        except:
-            print('Missing parameters')
-            return
+@router.get("/fetch")
+def fetch_route(request: Request, usr: str, pwd: str, sid: int, sy: int, sq: int):
+    if(usr == None or pwd == None or sid == None or sy == None or sq == None):
+        output = { "status": 400, "message": "Missing parameters" }
 
-        db = get_database()
-        [sess, cust_id] = authenticate(db, user, password)
+    user = usr
+    password = pwd
+    series_id = sid
+    season_year = sy
+    season_quarter = sq
 
-        if cust_id != 0:
-            get_results(db, sess, cust_id, series_id, season_year, season_quarter, 1)
-            output = f'Successfully synchronized data from {season_year} - Season {season_quarter}.'
-        else:
-            output = 'Authentication Error. Make sure iRacing is online and that your username/password combination is correct.'
+    db = get_database()
+    [sess, cust_id] = authenticate(db, user, password)
+    print(cust_id)
 
-        close_database(db)
+    if cust_id != 0:
+        get_results(db, sess, cust_id, series_id, season_year, season_quarter, 1)
+        output = { "status": 200, "message": f"Successfully synchronized data from {season_year} - Season {season_quarter}." }
+    else:
+        output = { "status": 403, "message": "Authentication Error. Make sure iRacing is online and that your username/password combination is correct." }
 
-        self.send_response(200)
-        self.send_header('Content-type','text/plain')
-        self.end_headers()
-        self.wfile.write(output.encode('utf-8'))
-        return
+    close_database(db)
+    output = json.dumps(output)
+
+    return Response(content=output, media_type='text/plain; charset=utf-8')

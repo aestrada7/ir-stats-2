@@ -5,7 +5,7 @@ export default function MenuCard(props) {
     let { link, caption } = props;
 
     return (
-        <Link href={link}>
+        <Link href={link} className={Classes.topLevelLink}>
             <button className={Classes.cardLink}>
                 <span>{caption}</span>
             </button>

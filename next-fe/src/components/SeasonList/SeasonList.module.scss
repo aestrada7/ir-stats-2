@@ -1,8 +1,23 @@
 @import "@/scss/globals";
 
 .seasonList {
+    @include globalBorder;
+    padding: 20px;
+    margin-bottom: 20px;
+
     .seasonTitle {
         @include boxTitle;
+
+        .syncIcon {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            right: 20px;
+            top: 10px;
+            font-size: $font-xlarge;
+            color: $accent-color;
+            cursor: pointer;
+        }
     }
 
     .seasons {

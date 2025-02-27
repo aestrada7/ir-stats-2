@@ -1,6 +1,6 @@
 import { PYRA_BASE_URL } from "@/services/config";
 
-const REVALIDATE_TIME = 3600;
+const REVALIDATE_TIME = 5;
 
 /**
  * Retrieves all existing seasons stored in the database.
@@ -10,7 +10,7 @@ const REVALIDATE_TIME = 3600;
  * @returns {object} The JSON object with all recorded seasons for the filtered combination.
  */
 export const getSeasonList = async(cust_id, series_id) => {
-    const response = await fetch(`${PYRA_BASE_URL}/api/seasons?cust_id=${cust_id}&series_id=${series_id}`, {
+    const response = await fetch(`${PYRA_BASE_URL}/seasons?cust_id=${cust_id}&series_id=${series_id}`, {
         next: { revalidate: REVALIDATE_TIME }
     });
     return await response.json();
@@ -26,7 +26,7 @@ export const getSeasonList = async(cust_id, series_id) => {
  * @returns {object} The JSON object with all recorded sessions for the filtered combination.
  */
 export const getSeasonSessions = async(cust_id, series_id, season_year, season_quarter) => {
-    const response = await fetch(`${PYRA_BASE_URL}/api/season_sessions?cust_id=${cust_id}&series_id=${series_id}&season_year=${season_year}&season_quarter=${season_quarter}`, {
+    const response = await fetch(`${PYRA_BASE_URL}/season_sessions?cust_id=${cust_id}&series_id=${series_id}&season_year=${season_year}&season_quarter=${season_quarter}`, {
         next: { revalidate: REVALIDATE_TIME }
     });
     return await response.json();
