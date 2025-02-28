@@ -44,7 +44,8 @@ def process_subsession(db, session, subsession_id):
 '''
 Retrieve results from a series in a season.
 '''
-def get_results(db, session, cust_id, series_id, season_year, season_quarter, category):
+def get_results(q, session, cust_id, series_id, season_year, season_quarter, category):
+    db = get_database()
     IRACING_RESULTS_DATA_URL = f"{Constants.IRACING_RESULTS_URL}?season_year={season_year}&season_quarter={season_quarter}&cust_id={cust_id}&series_id={series_id}&official_only=true&event_types={Constants.EVENT_TYPE_RACE}"
     results = session.get(IRACING_RESULTS_DATA_URL)
 
@@ -58,6 +59,7 @@ def get_results(db, session, cust_id, series_id, season_year, season_quarter, ca
         subsessions = session.get(chunk_url)
 
         for subsession in subsessions.json():
+            q.put(f"Subsession {subsession['subsession_id']} found")
             subsession_id = subsession['subsession_id']
             start_time = subsession['start_time']
             event_laps_complete = subsession['event_laps_complete']
@@ -74,7 +76,9 @@ def get_results(db, session, cust_id, series_id, season_year, season_quarter, ca
 
             subsession_inserted = insert_subsession(db, subsession_id, start_time, event_laps_complete, series_name, season_quarter, season_year, race_week_num, track_id, max_weeks, series_id, caution_laps, winner_id, total_laps, sof)
             if subsession_inserted:
+                q.put(f"Subsession {subsession_id} processed")
                 process_subsession(db, session, subsession_id)
                 insert_driver_subsession(db, cust_id, subsession_id)
 
+    close_database(db)
     print('Process Finished')

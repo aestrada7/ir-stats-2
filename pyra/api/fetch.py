@@ -1,5 +1,8 @@
 import json
+import asyncio
+import multiprocessing
 from fastapi import APIRouter, Request, Response
+from fastapi.responses import StreamingResponse
 
 from src.auth import *
 from src.db import *
@@ -7,12 +10,10 @@ from src.constants import *
 from src.iracing_api import *
 
 router = APIRouter()
+q = multiprocessing.Manager().Queue()
 
 @router.get("/fetch")
 def fetch_route(request: Request, usr: str, pwd: str, sid: int, sy: int, sq: int):
-    if(usr == None or pwd == None or sid == None or sy == None or sq == None):
-        output = { "status": 400, "message": "Missing parameters" }
-
     user = usr
     password = pwd
     series_id = sid
@@ -24,12 +25,22 @@ def fetch_route(request: Request, usr: str, pwd: str, sid: int, sy: int, sq: int
     print(cust_id)
 
     if cust_id != 0:
-        get_results(db, sess, cust_id, series_id, season_year, season_quarter, 1)
-        output = { "status": 200, "message": f"Successfully synchronized data from {season_year} - Season {season_quarter}." }
+        p = multiprocessing.Process(target=get_results, args=(q, sess, cust_id, series_id, season_year, season_quarter, 1))
+        p.start()
+        invalid = False
     else:
-        output = { "status": 403, "message": "Authentication Error. Make sure iRacing is online and that your username/password combination is correct." }
+        invalid = True
 
-    close_database(db)
-    output = json.dumps(output)
+    async def chunks():
+        if not invalid:
+            while p.is_alive() or not q.empty():
+                if not q.empty():
+                    data = q.get()
+                    yield f"{data}\n"
+                else:
+                    await asyncio.sleep(1)
+            yield "Process completed\n"
+        else:
+            yield "Authentication Error. Make sure iRacing is online and that your username/password combination is correct."
 
-    return Response(content=output, media_type='text/plain; charset=utf-8')
+    return StreamingResponse(chunks(), media_type="text/event-stream")
