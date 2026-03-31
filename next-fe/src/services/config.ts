@@ -1,0 +1,1 @@
+export const PYRA_BASE_URL: string = process.env.PYRA_BASE_URL;
