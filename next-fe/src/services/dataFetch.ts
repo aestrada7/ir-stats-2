@@ -11,7 +11,7 @@ const REVALIDATE_TIME: number = 3600;
  * @returns The JSON object with all recorded seasons for the filtered combination.
  */
 export const getSeasonList = async(cust_id: number, series_id: number): Promise<Season[]> => {
-    const response = await fetch(`${PYRA_BASE_URL}/api/seasons?cust_id=${cust_id}&series_id=${series_id}`, {
+    const response = await fetch(`${PYRA_BASE_URL}/seasons?cust_id=${cust_id}&series_id=${series_id}`, {
         next: { revalidate: REVALIDATE_TIME }
     });
     const data: Season[] = await response.json();
