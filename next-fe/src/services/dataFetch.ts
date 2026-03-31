@@ -1,19 +1,21 @@
 import { PYRA_BASE_URL } from "@/services/config";
+import { Season } from "@/services/interfaces";
 
-const REVALIDATE_TIME = 5;
+const REVALIDATE_TIME: number = 3600;
 
 /**
  * Retrieves all existing seasons stored in the database.
  * 
- * @param {number} cust_id The customer id to filter by.
- * @param {number} series_id The series id to filter by.
- * @returns {object} The JSON object with all recorded seasons for the filtered combination.
+ * @param cust_id The customer id to filter by.
+ * @param series_id The series id to filter by.
+ * @returns The JSON object with all recorded seasons for the filtered combination.
  */
-export const getSeasonList = async(cust_id, series_id) => {
-    const response = await fetch(`${PYRA_BASE_URL}/seasons?cust_id=${cust_id}&series_id=${series_id}`, {
+export const getSeasonList = async(cust_id: number, series_id: number): Promise<Season[]> => {
+    const response = await fetch(`${PYRA_BASE_URL}/api/seasons?cust_id=${cust_id}&series_id=${series_id}`, {
         next: { revalidate: REVALIDATE_TIME }
     });
-    return await response.json();
+    const data: Season[] = await response.json();
+    return data;
 }
 
 /**

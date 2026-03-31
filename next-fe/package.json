@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@typescript/native-preview": "^7.0.0-dev.20260331.1",
     "next": "14.2.5",
     "react": "^18",
     "react-dom": "^18"
