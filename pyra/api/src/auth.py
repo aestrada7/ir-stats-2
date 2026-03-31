@@ -14,14 +14,18 @@ def auth_nodb(username, password):
     if authcode == 0:
         return session
 
-    return session    
+    return session
 
 def authenticate(db, username, password):
     base64_pwd = base64_password(username, password)
-    payload = { 'email': username, 'password': base64_pwd }
+    return authenticate_b64(db, username, base64_pwd)
 
+def authenticate_b64(db, username, base64_pwd):
+    payload = { 'email': username, 'password': base64_pwd }
+    print(payload)
     session = requests.Session()
     response = session.post(Constants.IRACING_LOGIN_URL, data=payload)
+    print(response.json())
     authcode = response.json()['authcode']
     if authcode == 0:
         return [session, 0]

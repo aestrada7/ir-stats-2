@@ -5,11 +5,12 @@ import Classes from "./SeasonList.module.scss";
 
 export default async function SeasonList(props) {
     const { seriesObj } = props;
+    const { cust_id } = props;
 
     let allSeasonsList = [];
 
     for(let i in seriesObj.series) {
-        let tempList = await getSeasonList(182407, seriesObj.series[i].series_id);
+        let tempList = await getSeasonList(cust_id, seriesObj.series[i].series_id);
         for(let k in tempList) {
             tempList[k]["series_id"] = seriesObj.series[i].series_id;
         }
@@ -46,7 +47,17 @@ export default async function SeasonList(props) {
 
     return (
         <div className={Classes.seasonList}>
-            <div className={Classes.seasonTitle}>{seriesObj.series_title}</div>
+            <div className={Classes.seasonTitle}>
+                {seriesObj.series_title}
+                <span className={Classes.syncIcon}>sync</span>
+            </div>
+            <div className={Classes.seasonSyncWindow}>
+                <div className={Classes.seasonSyncTitle}>Season Sync: {seriesObj.series_title}</div>
+                <div className={Classes.seasonSyncClose}>x</div>
+            </div>
+            {
+                seasonList.length === 0 ? <div className={Classes.noSeasons}>No seasons found</div> : null
+            }
             <div className={Classes.seasons}>
                 { seasonList.map((season) => (
                     <MenuCard key={`${season.season_year}-${season.season_quarter}`} 

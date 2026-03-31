@@ -11,7 +11,7 @@ const REVALIDATE_TIME: number = 3600;
  * @returns The JSON object with all recorded seasons for the filtered combination.
  */
 export const getSeasonList = async(cust_id: number, series_id: number): Promise<Season[]> => {
-    const response = await fetch(`${PYRA_BASE_URL}/api/seasons?cust_id=${cust_id}&series_id=${series_id}`, {
+    const response = await fetch(`${PYRA_BASE_URL}/seasons?cust_id=${cust_id}&series_id=${series_id}`, {
         next: { revalidate: REVALIDATE_TIME }
     });
     const data: Season[] = await response.json();
@@ -28,7 +28,7 @@ export const getSeasonList = async(cust_id: number, series_id: number): Promise<
  * @returns {object} The JSON object with all recorded sessions for the filtered combination.
  */
 export const getSeasonSessions = async(cust_id, series_id, season_year, season_quarter) => {
-    const response = await fetch(`${PYRA_BASE_URL}/api/season_sessions?cust_id=${cust_id}&series_id=${series_id}&season_year=${season_year}&season_quarter=${season_quarter}`, {
+    const response = await fetch(`${PYRA_BASE_URL}/season_sessions?cust_id=${cust_id}&series_id=${series_id}&season_year=${season_year}&season_quarter=${season_quarter}`, {
         next: { revalidate: REVALIDATE_TIME }
     });
     return await response.json();

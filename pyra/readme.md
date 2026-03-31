@@ -21,3 +21,4 @@ Writing it in Python will also allow us to use PyTorch in the future for some pl
 	```
 3. If it's the first time running the application and tables don't exist, run `py db.py`
 4. To locally test, use the `local_test.py` script, ensuring to change username and password in the code.
+5. Since the switch to FastAPI, `fastapi dev main.py` to test the endpoints locally in a much more accurate way.

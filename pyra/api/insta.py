@@ -1,11 +1,16 @@
-from simple_http_server import route, server
-from datetime import datetime
+from fastapi import APIRouter, Request, Response
+from datetime import datetime, timedelta
 
 from src.auth import *
 from src.constants import *
 from src.iracing_api import *
 
-P1_LOGO = "https://cdn.discordapp.com/attachments/1253731028992917585/1254963577622630532/Default_Compact_White.png?ex=66a1a2e9&is=66a05169&hm=a5534d6ecf80958c8a95f80fa1fa34caefd8e30b83cdd3e146bf1d6a761d09ad&"
+P1_LOGO = "https://media.discordapp.net/attachments/1253731028992917585/1254963577622630532/Default_Compact_White.png?ex=67a408e9&is=67a2b769&hm=7b4f0c6670f2edba30fb1d9d655cd6ba30a9f279a936f845f11ec8116e9ac8f1&=&format=webp&quality=lossless"
+IMAGE_URL = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+#IMAGE_URL = "https://media.discordapp.net/attachments/1258787923277643818/1341581295838298216/p1_phoenix_25s2.png?ex=67b68472&is=67b532f2&hm=c90a65e9ed4eb778ab726ff4492c11d933f2c3ccfd11368845a28189be96de27&=&format=webp&quality=lossless"
+#IMAGE_URL = "file:///Users/antonio.estrada/Desktop/a.png"
+
+router = APIRouter()
 
 def get_css(theme):
     text_color = "black" if theme == "light" else "white"
@@ -110,6 +115,10 @@ def get_css(theme):
     }
     .background > img {
         filter: grayscale(1);
+        width: 1080px;
+        height: 1350px;
+        object-fit: cover;
+        object-position: 50% 50%;
     }
     .background .overlay {
         position: absolute;
@@ -119,6 +128,9 @@ def get_css(theme):
         top: 0;
         left: 0;
         background-color: rgba(28, 22, 48, 0.7);
+    }
+    .invert {
+        filter: invert(1);
     }
     button {
         position: absolute;
@@ -159,7 +171,7 @@ def readable_interval(interval, laps, total_laps):
         return f"-{total_laps - laps}"
     else:
         secs_down = float(interval / 10000)
-        return f"-{"{:.2f}".format(secs_down)}"
+        return "-{:.2f}".format(secs_down)
     
 def gain_loss(start, finish):
     res = start - finish
@@ -171,17 +183,20 @@ def gain_loss(start, finish):
         return f"{res}"
     
 def format_car_number(car_num, car_color1, car_color2, car_num_color1, car_num_color2):
-    car_format = f"<div style='text-align: center; color: #{car_num_color1}; background-color: #{car_color1}; -webkit-text-stroke-width: 1px; -webkit-text-stroke-color: #{car_num_color2}'>{car_num}</div>"
+    invert = ""
+    if car_color1 == car_num_color1:
+        invert = "class='invert'"
+
+    car_format = f"<div style='text-align: center; color: #{car_num_color1}; background-color: #{car_color1}; -webkit-text-stroke-width: 1px; -webkit-text-stroke-color: #{car_num_color2}'><span {invert}>{car_num}</span></div>"
     return car_format
 
 def format_date(start_date):
-    #return datetime.strptime(start_date, "%Y-%m-%dT%H:%M:%SZ")
-    formatted_date = datetime.strptime(start_date, "%Y-%m-%dT%H:%M:%SZ")
+    formatted_date = datetime.strptime(start_date, "%Y-%m-%dT%H:%M:%SZ") - timedelta(hours=5)
     formatted_date = f"{formatted_date.year}/{formatted_date.month}/{formatted_date.day}"
     return formatted_date
 
-@route("/")
-def index(id, usr, pwd, bg, theme):
+@router.get("/insta")
+def index(request: Request, id: int, usr: str, pwd: str, bg: str, theme):
     css = get_css(theme)
     js = get_js()
     session = auth_nodb(usr, pwd)
@@ -247,9 +262,10 @@ def index(id, usr, pwd, bg, theme):
     """
 
     background = ""
-    if(bg):
+    if(IMAGE_URL):
+        background = f"<div class='background'><img src='{IMAGE_URL}' /><div class='overlay'></div></div>"
+    if(bg != ""):
         background = f"<div class='background'><img src='{bg}' /><div class='overlay'></div></div>"
 
-    return f"<html><head><title>Subsession</title>{css}{js}</head><body><div class='table'>{background}{session_info}{data_table}</div><button class='print' onclick='printDiv(\".table\")'>Print</button></body></html>"
-
-server.start(port=7400)
+    output = f"<html><head><title>Subsession</title>{css}{js}</head><body><div class='table'>{background}{session_info}{data_table}</div><button class='print' onclick='printDiv(\".table\")'>Print</button></body></html>"
+    return Response(content=output, media_type='text/html; charset=utf-8')

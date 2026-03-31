@@ -4,6 +4,7 @@
 /next-fe/.env.local
 /next-fe/.env
 /pyra/.env
+/pyra/.env.vercel
 /pyra/_trash
 /pyra/api/__pycache__
 /pyra/api/src/__pycache__

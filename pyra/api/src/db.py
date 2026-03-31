@@ -206,9 +206,10 @@ def get_season_subsessions(db, cust_id, season_year, season_quarter, series_id):
         select_sql = '''
             SELECT s.subsession_id, s.start_time, s.event_laps_complete, s.season_quarter, s.season_year, s.race_week_num, s.track_id, s.max_weeks, s.series_id, s.winner_id,
                    r.laps, s.sof, d.cust_id, r.champ_points, r.starting_position, r.finishing_position, r.led, v.display_name AS winner_name, v.helm_color1 AS winner_color1, 
-                   v.helm_color2 AS winner_color2, v.helm_color3 AS winner_color3, r.dnf
+                   v.helm_color2 AS winner_color2, v.helm_color3 AS winner_color3, r.dnf, t.track_short
             FROM subsessions s INNER JOIN driver_subsessions d ON s.subsession_id = d.subsession_id 
             INNER JOIN drivers v ON s.winner_id = v.cust_id
+            LEFT JOIN tracks t ON s.track_id = t.track_id
             LEFT JOIN raceresults r ON s.subsession_id = r.subsession_id AND r.cust_id = %s
             WHERE s.season_year = %s AND s.season_quarter = %s AND s.series_id = %s AND d.cust_id = %s
         '''
@@ -318,4 +319,26 @@ def upsert_message(db, cust_id, season_year, season_quarter, race_week_num, mess
         print(f'Message created correctly for cust_id {cust_id}, season_year {season_year}, season_quarter {season_quarter}, race_week_num {race_week_num}, series_id {series_id}')
 
     except psycopg2.Error as error: 
+        print('Error - ', error)
+
+def get_track_by_id(db, track_id):
+    try:
+        conn = db
+        cursor = conn.cursor()
+        select_sql = '''
+            SELECT * FROM tracks
+        '''
+        cursor.execute(select_sql)
+        result = cursor.fetchall()
+
+        column_names = [desc[0] for desc in cursor.description]
+        cursor.close()
+
+        output = []
+        for row in result:
+            output.append(dict(zip(column_names, row)))
+
+        return output
+
+    except psycopg2.Error as error:
         print('Error - ', error)

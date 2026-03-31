@@ -1,41 +1,46 @@
-from http.server import BaseHTTPRequestHandler
-import urllib.parse
+import json
+import asyncio
+import multiprocessing
+from fastapi import APIRouter, Request, Response
+from fastapi.responses import StreamingResponse
 
 from src.auth import *
 from src.db import *
 from src.constants import *
 from src.iracing_api import *
 
-class handler(BaseHTTPRequestHandler):
- 
-    def do_GET(self):
-        query = urllib.parse.urlparse(self.path).query
-        qs = urllib.parse.parse_qs(query)
+router = APIRouter()
+q = multiprocessing.Manager().Queue()
 
-        try:
-            user = qs['usr'][0]
-            password = base64_decode(qs['pwd'][0])
-            series_id = qs['sid'][0]
-            season_year = qs['sy'][0]
-            season_quarter = qs['sq'][0]
-            print(qs)
-        except:
-            print('Missing parameters')
-            return
+@router.get("/fetch")
+def fetch_route(request: Request, usr: str, pwd: str, sid: int, sy: int, sq: int):
+    user = usr
+    password = pwd
+    series_id = sid
+    season_year = sy
+    season_quarter = sq
 
-        db = get_database()
-        [sess, cust_id] = authenticate(db, user, password)
+    db = get_database()
+    [sess, cust_id] = authenticate(db, user, password)
+    print(cust_id)
 
-        if cust_id != 0:
-            get_results(db, sess, cust_id, series_id, season_year, season_quarter, 1)
-            output = f'Successfully synchronized data from {season_year} - Season {season_quarter}.'
+    if cust_id != 0:
+        p = multiprocessing.Process(target=get_results, args=(q, sess, cust_id, series_id, season_year, season_quarter, 1))
+        p.start()
+        invalid = False
+    else:
+        invalid = True
+
+    async def chunks():
+        if not invalid:
+            while p.is_alive() or not q.empty():
+                if not q.empty():
+                    data = q.get()
+                    yield f"{data}\n"
+                else:
+                    await asyncio.sleep(1)
+            yield "Process completed\n"
         else:
-            output = 'Authentication Error. Make sure iRacing is online and that your username/password combination is correct.'
+            yield "Authentication Error. Make sure iRacing is online and that your username/password combination is correct."
 
-        close_database(db)
-
-        self.send_response(200)
-        self.send_header('Content-type','text/plain')
-        self.end_headers()
-        self.wfile.write(output.encode('utf-8'))
-        return
+    return StreamingResponse(chunks(), media_type="text/event-stream")
